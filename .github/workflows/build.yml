@@ -12,6 +12,10 @@ on:
       - "LICENSE"
       - "README.md"
       - ".github/dependabot.yml"
+      
+permissions:
+   contents: write
+
 jobs:
   build:
     name: Build
