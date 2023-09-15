@@ -62,6 +62,13 @@ jobs:
         run: |
           go run ./
 
+      - name: Build db and metadb file
+        env:
+          NO_SKIP: true
+        run: |
+          go install -trimpath -ldflags="-s -w -buildid=" github.com/metacubex/geo/cmd/geo@master
+          geo convert ip -i v2ray -o meta -f geoip.metadb ./output/dat/geoip.dat
+
       - name: Verify mmdb files
         run: |
           cd ./output/maxmind || exit 1
@@ -96,7 +103,7 @@ jobs:
       - name: Move files to publish directory
         run: |
           mkdir -p publish
-          mv ./output/dat/*.dat ./output/dat/*.sha256sum ./output/maxmind/*.mmdb ./output/maxmind/*.sha256sum *.gz *.zip ./publish/
+          mv ./output/dat/*.dat ./output/dat/*.metadb ./output/dat/*.sha256sum ./output/maxmind/*.mmdb ./output/maxmind/*.sha256sum *.gz *.zip ./publish/
           cp -fpPR ./output/text ./publish
 
       - name: Git push assets to "release" branch
